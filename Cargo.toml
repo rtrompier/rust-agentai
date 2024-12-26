@@ -17,3 +17,10 @@ async-trait = "0.1.83"
 log = "0.4.22"
 schemars = "0.8.21"
 serde = "1.0.216"
+
+[[example]]
+name = "basic"
+required-features = ["tokio"]
+
+[dev-dependencies]
+tokio = { version = "1", features = ["full"] }
