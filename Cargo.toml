@@ -1,0 +1,19 @@
+[package]
+name = "agentai"
+version = "0.1.0"
+edition = "2021"
+authors = ["Adam Strojek <adam@strojek.info>"]
+license = "MIT"
+license-file = "LICENSE"
+repository = "https://github.com/AdamStrojek/rust-agentai"
+description = "A brief description of the package"
+readme = "README.md"
+
+[dependencies]
+genai = "0.1.15"
+anyhow = "1.0.95"
+serde_json = "1.0.134"
+async-trait = "0.1.83"
+log = "0.4.22"
+schemars = "0.8.21"
+serde = "1.0.216"
