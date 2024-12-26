@@ -48,7 +48,7 @@ impl<'a, CTX> Agent<'a, CTX> {
 
 		// Prepare chat options
 		let mut schema = serde_json::to_value(schema_for!(D))?;
-		let mut obj = schema.as_object_mut().unwrap();
+		let obj = schema.as_object_mut().unwrap();
 		// Schemars attaches additional fields and not every LLM accepts them (Gemini)
 		obj.remove("$schema");
 		obj.remove("title");
