@@ -1,4 +1,4 @@
-use agentai::agent::Agent;
+use agentai::Agent;
 use anyhow::Result;
 use genai::Client;
 use log::{info, LevelFilter};
