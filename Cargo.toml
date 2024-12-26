@@ -19,7 +19,7 @@ serde = "1.0.216"
 
 [[example]]
 name = "basic"
-required-features = ["tokio"]
 
 [dev-dependencies]
-tokio = { version = "1", features = ["full"] }
+tokio = { version = "1.42.0", features = ["full"] }
+simplelog = "0.12.2"
