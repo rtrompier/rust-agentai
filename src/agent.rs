@@ -5,7 +5,7 @@ use genai::Client;
 use schemars::{schema_for, JsonSchema};
 use serde::de::DeserializeOwned;
 use serde_json::{from_str, json, Value};
-use log::{debug, info, trace};
+use log::{debug, trace};
 use std::collections::HashMap;
 use std::sync::Arc;
 
