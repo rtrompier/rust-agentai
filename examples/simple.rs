@@ -4,9 +4,11 @@ use genai::Client;
 use log::{info, LevelFilter};
 use simplelog::{ColorChoice, Config, TermLogger, TerminalMode};
 
-const MODEL: &str = "";
+// Remember about providing what model you want to use
+// For some models you can provide API keys using environment variables
+const MODEL: &str = "gpt-4o-mini";
 
-const SYSTEM: &str = "";
+const SYSTEM: &str = "You are helpful assistant";
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -18,14 +20,14 @@ async fn main() -> Result<()> {
     )?;
     info!("Starting AgentAI");
 
-    // Creating empty Context, in this example we don't require to use Context, but object need
-    // to be passed and initialised.
+    // Creating empty Context, in this example we don't require to use Context,
+    // but object need to be passed and initialised.
     let ctx = Ctx {};
 
     // Creating GenAI client
     let client = Client::default();
 
-    let question = "";
+    let question = "Why sky is blue?";
 
     info!("Question: {}", question);
 

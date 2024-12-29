@@ -5,8 +5,11 @@ edition = "2021"
 authors = ["Adam Strojek <adam@strojek.info>"]
 license = "MIT"
 repository = "https://github.com/AdamStrojek/rust-agentai"
-description = "A brief description of the package"
+description = "AgentAI is a Rust library designed to simplify the creation of AI agents."
 readme = "README.md"
+
+[package.metadata.docs.rs]
+cargo-args = ["-Zunstable-options", "-Zrustdoc-scrape-examples"]
 
 [dependencies]
 genai = "0.1.15"
@@ -17,9 +20,12 @@ log = "0.4.22"
 schemars = "0.8.21"
 serde = "1.0.216"
 
-[[example]]
-name = "simple"
-
 [dev-dependencies]
 tokio = { version = "1.42.0", features = ["full"] }
 simplelog = "0.12.2"
+
+[[example]]
+name = "simple"
+
+[[example]]
+name = "struct_output"
