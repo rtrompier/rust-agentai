@@ -60,6 +60,10 @@
 pub mod agent;
 pub mod tool;
 
+// This module will be enabled only when generating documentation
+#[cfg(doc)]
+pub mod examples;
+
 #[allow(unused_imports)]
 pub use agent::*;
 
