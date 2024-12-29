@@ -1,3 +1,4 @@
+use std::any::TypeId;
 use anyhow::{Context, Result};
 use async_trait::async_trait;
 use genai::chat::{ChatMessage, ChatOptions, ChatRequest, JsonSpec, Tool, ToolResponse};
@@ -39,7 +40,7 @@ impl<'a, CTX> Agent<'a, CTX> {
 
 	pub async fn run<D>(&mut self, model: &str, prompt: &str) -> Result<D>
 	where
-		D: DeserializeOwned + JsonSchema + ?Sized,
+		D: DeserializeOwned + JsonSchema + ?Sized + 'static,
 	{
 		debug!("Agent Question: {}", prompt);
 		// Add new request to history
@@ -47,14 +48,20 @@ impl<'a, CTX> Agent<'a, CTX> {
 		self.history.push(ChatMessage::user(prompt));
 
 		// Prepare chat options
-		let mut schema = serde_json::to_value(schema_for!(D))?;
-		let obj = schema.as_object_mut().unwrap();
-		// Schemars attaches additional fields and not every LLM accepts them (Gemini)
-		obj.remove("$schema");
-		obj.remove("title");
-		let chat_opts = ChatOptions::default()
-			.with_temperature(0.2) // TODO: Allow to provide chat options
-			.with_response_format(JsonSpec::new("ResponseFormat", json!(obj)));
+		// TODO: Allow to provide chat options
+		let mut chat_opts = ChatOptions::default()
+			.with_temperature(0.2);
+
+		let is_answer_string = TypeId::of::<String>() == TypeId::of::<D>();
+		if !is_answer_string {
+			// If answer type is more complex then add response format to request options
+			let mut response_schema = serde_json::to_value(schema_for!(D))?;
+			let obj = response_schema.as_object_mut().unwrap();
+			// Schemars attaches additional fields and not every LLM accepts them (Gemini)
+			obj.remove("$schema");
+			obj.remove("title");
+			chat_opts = chat_opts.with_response_format(JsonSpec::new("ResponseFormat", json!(obj)));
+		}
 
 		loop {
 			// Create chat request
@@ -83,12 +90,20 @@ impl<'a, CTX> Agent<'a, CTX> {
 					}
 				}
 			} else {
-				let resp = chat_resp_str.context("Missing string in response")?;
+				let mut resp = chat_resp_str.context("Missing string in response")?.to_string();
 				debug!("Agent Answer: {resp}");
-				self.history.push(ChatMessage::assistant(resp));
-				return Ok(from_str(
-					resp
-				)?);
+				self.history.push(ChatMessage::assistant(resp.clone()));
+				if is_answer_string {
+					// TODO: Workaround when choosing String as response type. Because we are
+					// expecting D: DeserializeOwned then we can't return String directly.
+					// To workaround this I escape content and later deserialize it using
+					// serde_json::from_str to correct "struct" (String)
+					resp = Value::String(resp).to_string();
+				}
+				let resp = from_str(
+					&resp
+				)?;
+				return Ok(resp);
 			}
 		}
 	}
