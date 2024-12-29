@@ -12,3 +12,4 @@
 //! List of all available example can be found below
 
 pub mod simple;
+pub mod struct_output;

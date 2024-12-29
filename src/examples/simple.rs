@@ -1,4 +1,4 @@
-//! ## Simple Example
+//! # Simple Example
 //!
 //! Here is very simple example how to use AgentAI crate. Here we only initialize
 //! LLM client, and later use it to answer on simple question.
@@ -11,7 +11,7 @@
 //! cargo run --example simple
 //! ```
 //!
-//! ### Source Code
+//! ## Source Code
 //!
 //! ```rust
 #![doc = include_str!("../../examples/simple.rs")]
