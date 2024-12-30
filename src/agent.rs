@@ -10,6 +10,12 @@ use std::any::TypeId;
 use std::collections::HashMap;
 use std::sync::Arc;
 
+/// The `Agent` struct represents an agent that interacts with a chat model.
+/// It maintains a history of chat messages, a set of tools, and a context.
+///
+/// As `Context` you can provide any structure. Such object will not be used by
+/// `Agent` itself, but it will be passed in unmodified state as reference to any
+/// `AgentTool` trait, that was registered to be used.
 pub struct Agent<'a, CTX> {
     client: &'a Client,
     context: &'a CTX,
@@ -19,6 +25,17 @@ pub struct Agent<'a, CTX> {
 }
 
 impl<'a, CTX> Agent<'a, CTX> {
+    /// Creates a new `Agent` instance.
+    ///
+    /// # Arguments
+    ///
+    /// * `client` - The client used to interact with the chat model.
+    /// * `system` - The system message to initialize the chat history.
+    /// * `context` - The context associated with the agent.
+    ///
+    /// # Returns
+    ///
+    /// A new `Agent` instance.
     pub fn new(client: &'a Client, system: &str, context: &'a CTX) -> Self {
         Self {
             client,
@@ -29,6 +46,11 @@ impl<'a, CTX> Agent<'a, CTX> {
         }
     }
 
+    /// Adds a tool to the agent.
+    ///
+    /// # Arguments
+    ///
+    /// * `agent_tool` - The tool to add.
     pub fn add_tool(&mut self, agent_tool: Arc<dyn AgentTool<CTX>>) {
         let tool = Tool::new(agent_tool.name())
             .with_description(agent_tool.description())
@@ -38,6 +60,16 @@ impl<'a, CTX> Agent<'a, CTX> {
         self.tools.insert(agent_tool.name(), agent_tool);
     }
 
+    /// Runs the agent with the given model and prompt.
+    ///
+    /// # Arguments
+    ///
+    /// * `model` - The model to use for the chat.
+    /// * `prompt` - The prompt to send to the chat model.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the deserialized response.
     pub async fn run<D>(&mut self, model: &str, prompt: &str) -> Result<D>
     where
         D: DeserializeOwned + JsonSchema + 'static,
