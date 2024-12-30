@@ -1,6 +1,5 @@
 use crate::AgentTool;
 use anyhow::{Context, Result};
-use async_trait::async_trait;
 use genai::chat::{ChatMessage, ChatOptions, ChatRequest, JsonSpec, Tool, ToolResponse};
 use genai::Client;
 use log::{debug, trace};
@@ -41,7 +40,7 @@ impl<'a, CTX> Agent<'a, CTX> {
 
     pub async fn run<D>(&mut self, model: &str, prompt: &str) -> Result<D>
     where
-        D: DeserializeOwned + JsonSchema + ?Sized + 'static,
+        D: DeserializeOwned + JsonSchema + 'static,
     {
         debug!("Agent Question: {}", prompt);
         // Add new request to history
