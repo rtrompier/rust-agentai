@@ -31,12 +31,12 @@
 //!
 //! #[tokio::main]
 //! async fn main() -> anyhow::Result<()> {
-//! 	let ctx = Ctx {};
-//! 	let client = genai::Client::default();
-//! 	let mut agent = Agent::new(&client, "You are a useful assistant", &ctx);
-//! 	let answer: String = agent.run("gpt-4o", "Why sky is blue?").await?;
-//! 	println!("Answer: {}", answer);
-//! 	Ok(())
+//!     let ctx = Ctx {};
+//!     let client = genai::Client::default();
+//!     let mut agent = Agent::new(&client, "You are a useful assistant", &ctx);
+//!     let answer: String = agent.run("gpt-4o", "Why sky is blue?").await?;
+//!     println!("Answer: {}", answer);
+//!     Ok(())
 //! }
 //!
 //! struct Ctx {}
