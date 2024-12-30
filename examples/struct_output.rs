@@ -12,43 +12,43 @@ const SYSTEM: &str = "You are helpful assistant";
 
 #[tokio::main]
 async fn main() -> Result<()> {
-	TermLogger::init(
-		LevelFilter::Trace,
-		Config::default(),
-		TerminalMode::Mixed,
-		ColorChoice::Auto,
-	)?;
-	info!("Starting AgentAI");
+    TermLogger::init(
+        LevelFilter::Trace,
+        Config::default(),
+        TerminalMode::Mixed,
+        ColorChoice::Auto,
+    )?;
+    info!("Starting AgentAI");
 
-	// Creating empty Context, in this example we don't require to use Context, but object need
-	// to be passed and initialised.
-	let ctx = Ctx {};
+    // Creating empty Context, in this example we don't require to use Context, but object need
+    // to be passed and initialised.
+    let ctx = Ctx {};
 
-	// Creating GenAI client
-	let client = Client::default();
+    // Creating GenAI client
+    let client = Client::default();
 
-	let question = "Why sky is blue?";
+    let question = "Why sky is blue?";
 
-	info!("Question: {}", question);
+    info!("Question: {}", question);
 
-	let mut agent = Agent::new(&client, SYSTEM, &ctx);
+    let mut agent = Agent::new(&client, SYSTEM, &ctx);
 
-	let answer: Answer = agent.run(MODEL, question).await?;
+    let answer: Answer = agent.run(MODEL, question).await?;
 
-	info!("{:#?}", answer);
+    info!("{:#?}", answer);
 
-	Ok(())
+    Ok(())
 }
 
 struct Ctx {}
 
 #[derive(Deserialize, JsonSchema, Debug)]
 struct Answer {
-	// It is always good idea to include thinking field for LLM's debugging
-	/// In this field provide your thinking steps
-	#[serde(rename = "_thinking")]
-	thinking: String,
+    // It is always good idea to include thinking field for LLM's debugging
+    /// In this field provide your thinking steps
+    #[serde(rename = "_thinking")]
+    thinking: String,
 
-	/// In this field provide answer
-	answer: String,
+    /// In this field provide answer
+    answer: String,
 }
