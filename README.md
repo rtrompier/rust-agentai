@@ -1,5 +1,5 @@
-[![](https://img.shields.io/crates/v/agentai.svg)][crates-io]
-[![](https://docs.rs/agentai/badge.svg)][api-docs]
+[![](https://img.shields.io/crates/v/agentai.svg)](https://crates.io/crates/agentai)
+[![](https://docs.rs/agentai/badge.svg)](https://docs.rs/agentai)
 
 <!-- cargo-rdme start -->
 
