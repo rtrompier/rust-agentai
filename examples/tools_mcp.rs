@@ -1,14 +1,11 @@
 use agentai::Agent;
 use anyhow::Result;
-use genai::Client;
 use log::{info, LevelFilter};
 use schemars::JsonSchema;
 use serde::Deserialize;
 use simplelog::{ColorChoice, Config, TermLogger, TerminalMode};
 use std::env;
 use agentai::mcp::McpClient;
-
-const MODEL: &str = "gpt-4o-mini";
 
 const SYSTEM: &str =
     "You are helpful assistant.";
@@ -23,18 +20,15 @@ async fn main() -> Result<()> {
     )?;
     info!("Starting AgentAI");
 
-    let model = env::var("AGENTAI_MODEL").unwrap_or(MODEL.to_owned());
-
-    // Creating GenAI client
-    let client = Client::default();
+    let model = std::env::var("AGENTAI_MODEL").unwrap_or("gemini-2.0-flash".to_string());
 
     let question = "What is current time in Poland??";
 
     info!("Question: {}", question);
 
-    let mut agent = Agent::new(&client, SYSTEM, &());
+    let mut agent = Agent::new(SYSTEM, &());
 
-    let mcp_tools = McpClient::new("uvx", ["mcp-server-time"]).await?;
+    let mcp_tools = McpClient::new("uvx", ["mcp-server-time"], None).await?;
     for agent_tool in mcp_tools.tools().await? {
         agent.add_tool(agent_tool);
     }

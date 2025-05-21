@@ -21,7 +21,7 @@
 //! To start using AgentAI crate just enter in root directory for your project this command:
 //!
 //! ```bash
-//! cargo add agentai genai
+//! cargo add agentai
 //! ```
 //!
 //! This will install this crate with all required dependencies.
@@ -36,8 +36,7 @@
 //!
 //! #[tokio::main]
 //! async fn main() -> anyhow::Result<()> {
-//!     let client = genai::Client::default();
-//!     let mut agent = Agent::new(&client, "You are a useful assistant", &());
+//!     let mut agent = Agent::new("You are a useful assistant", &());
 //!     let answer: String = agent.run("gpt-4o", "Why sky is blue?").await?;
 //!     println!("Answer: {}", answer);
 //!     Ok(())

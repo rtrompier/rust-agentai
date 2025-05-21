@@ -7,13 +7,10 @@
 use agentai::{Agent, AgentTool};
 use anyhow::{Context, Result};
 use async_trait::async_trait;
-use genai::Client;
 use log::{info, LevelFilter};
 use serde_json::{json, Value};
 use simplelog::{ColorChoice, Config, TermLogger, TerminalMode};
 use std::sync::Arc;
-
-const MODEL: &str = "gpt-4o-mini";
 
 const SYSTEM: &str = "You are helpful assistant. You goal is to provide summary for provided site. Limit you answer to 3 sentences.";
 
@@ -27,20 +24,19 @@ async fn main() -> Result<()> {
     )?;
     info!("Starting AgentAI");
 
-    // Creating GenAI client
-    let client = Client::default();
+    let model = std::env::var("AGENTAI_MODEL").unwrap_or("gemini-2.0-flash".to_string());
 
     let question =
         "For what I can use this library? https://raw.githubusercontent.com/AdamStrojek/rust-agentai/refs/heads/master/README.md";
 
     info!("Question: {}", question);
 
-    let mut agent = Agent::new(&client, SYSTEM, &());
+    let mut agent = Agent::new(SYSTEM, &());
 
     // Remember to register your tool!
     agent.add_tool(Arc::new(UrlFetcherTool {}));
 
-    let answer: String = agent.run(MODEL, question).await?;
+    let answer: String = agent.run(&model, question).await?;
 
     info!("Answer: {}", answer);
 
