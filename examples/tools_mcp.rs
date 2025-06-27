@@ -4,8 +4,7 @@ use log::{info, LevelFilter};
 use schemars::JsonSchema;
 use serde::Deserialize;
 use simplelog::{ColorChoice, Config, TermLogger, TerminalMode};
-use std::env;
-use agentai::mcp::McpClient;
+use agentai::tool::mcp::McpToolBox;
 
 const SYSTEM: &str =
     "You are helpful assistant.";
@@ -20,20 +19,19 @@ async fn main() -> Result<()> {
     )?;
     info!("Starting AgentAI");
 
-    let model = std::env::var("AGENTAI_MODEL").unwrap_or("gemini-2.0-flash".to_string());
-
     let question = "What is current time in Poland??";
 
     info!("Question: {}", question);
 
-    let mut agent = Agent::new(SYSTEM, &());
+    let base_url = std::env::var("AGENTAI_BASE_URL")?;
+    let api_key = std::env::var("AGENTAI_API_KEY")?;
+    let model = std::env::var("AGENTAI_MODEL").unwrap_or("openai/gpt-4.1-mini".to_string());
 
-    let mcp_tools = McpClient::new("uvx", ["mcp-server-time"], None).await?;
-    for agent_tool in mcp_tools.tools().await? {
-        agent.add_tool(agent_tool);
-    }
+    let mut agent = Agent::new_with_url(&base_url, &api_key, SYSTEM);
 
-    let answer: Answer = agent.run(&model, question).await?;
+    let mcp_tools = McpToolBox::new("uvx", ["mcp-server-time", "--local-timezone", "UTC"], None).await?;
+
+    let answer: Answer = agent.run(&model, question, Some(&mcp_tools)).await?;
 
     info!("{:#?}", answer);
 
