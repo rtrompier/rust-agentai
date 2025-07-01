@@ -123,10 +123,6 @@ impl McpToolBox {
             tools: all_tools,
         })
     }
-    
-    pub fn add_tool(&mut self, tool: Tool) {
-        self.tools.push(tool);
-    }
 }
 
 #[async_trait]
@@ -183,10 +179,6 @@ impl ToolBox for McpToolBox {
         }
 
         Err(ToolError::NoToolFound(actual_tool_name.to_string()))
-    }
-
-    fn add_tool(&mut self, tool: Tool) {
-        self.tools.push(tool);
     }
 }
 
