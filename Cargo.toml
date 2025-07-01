@@ -22,7 +22,7 @@ cargo-args = ["-Zunstable-options", "-Zrustdoc-scrape-examples"]
 
 [dependencies]
 agentai-macros = { path = "./agentai-macros", version = "0.1", optional = true }
-genai = "0.3.5"
+genai = {git = "https://github.com/jeremychone/rust-genai", branch = "main"}
 anyhow = "1.0.98"
 thiserror = "2.0"
 serde = "1.0.219"
@@ -31,8 +31,14 @@ schemars = { version = "0.9", features = ["derive"] }
 async-trait = "0.1.88"
 log = "0.4.27"
 reqwest = "0.12.18"
-mcp_client_rs = {version = "0.1.7", optional = true}
+rmcp = { git = "https://github.com/modelcontextprotocol/rust-sdk", branch = "main", features = [
+    "client",
+    "transport-child-process",
+    "reqwest",
+    "transport-streamable-http-client"
+], optional = true}
 document-features = { version = "0.2"}
+tokio = { version = "1", features = ["full"], optional = true}
 
 [dev-dependencies]
 tokio = { version = "1.45.0", features = ["full"] }
@@ -50,6 +56,6 @@ default = ["mcp-client", "macros"]
 #! Features list:
 
 ## Enables experimental support for Agent Tools based on MCP Servers
-mcp-client = ["dep:mcp_client_rs"]
+mcp-client = ["dep:rmcp", "dep:tokio"]
 ## Enables support for macro [`#[toolbox]`](crate::tool::toolbox)
 macros = ["agentai-macros"]
