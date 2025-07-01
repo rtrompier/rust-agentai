@@ -80,6 +80,10 @@ impl ToolBox for McpToolBox {
 
         Ok(msg)
     }
+
+    fn add_tool(&mut self, tool: Tool) {
+        self.tools.push(tool);
+    }
 }
 
 #[cfg(test)]

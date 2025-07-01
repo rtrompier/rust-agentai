@@ -95,6 +95,7 @@ pub trait ToolBox {
     /// A `Result` containing the tool's output as a `String` on success,
     /// or a `ToolError` if the tool call fails or the tool is not found.
     async fn call_tool(&self, tool_name: String, arguments: Value) -> Result<String, ToolError>;
+    fn add_tool(&mut self, tool: Tool);
 }
 
 #[derive(Error, Debug)]
