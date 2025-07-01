@@ -27,7 +27,7 @@ async fn main() -> Result<()> {
 
     let mut agent = Agent::new_with_url(&base_url, &api_key, SYSTEM);
 
-    let answer: Answer = agent.run(&model, question, None).await?;
+    let answer: Answer = agent.run(&model, question, None, None, None).await?;
 
     info!("{:#?}", answer);
 

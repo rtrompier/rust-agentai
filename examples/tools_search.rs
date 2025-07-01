@@ -34,7 +34,9 @@ async fn main() -> Result<()> {
 
     let mut agent = Agent::new_with_url(&base_url, &api_key, SYSTEM);
 
-    let answer: Answer = agent.run(&model, question, Some(&web_search_tool)).await?;
+    let answer: Answer = agent
+        .run(&model, question, Some(&web_search_tool), None, None)
+        .await?;
 
     info!("{:#?}", answer);
 
