@@ -26,7 +26,7 @@ impl ToolBox for MergeTool {
                     tool_defs
                         .into_iter()
                         .map(move |mut tool| {
-                            tool.name = format!("{}-{}", index, tool.name);
+                            tool.name = format!("tool-{}_{}", index, tool.name);
                             tool
                         })
                         .collect::<Vec<_>>()
@@ -42,7 +42,7 @@ impl ToolBox for MergeTool {
 
     async fn call_tool(&self, tool_name: String, arguments: Value) -> Result<String, ToolError> {
         // only split once
-        match tool_name.split_once("-") {
+        match tool_name.split_once("_") {
             Some((tool_index, original_tool_name)) => {
                 let tool_index = tool_index
                     .parse::<usize>()
