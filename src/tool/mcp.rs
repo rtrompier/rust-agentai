@@ -140,7 +140,7 @@ impl ToolBox for McpToolBox {
 
         let server_name = &parts[0];
         let actual_tool_name = &parts[1];
-        println!("server_name: {server_name}, actual_tool_name: {actual_tool_name}");
+        debug!("server_name: {server_name}, actual_tool_name: {actual_tool_name}");
 
         // Try child process clients first
         if let Some(client) = self.child_clients.get(server_name) {
@@ -218,9 +218,9 @@ mod tests {
         assert!(!tools_with_prefix.is_empty());
 
         // Print available tools for debugging
-        println!("Available tools:");
+        debug!("Available tools:");
         for tool in &tool_defs {
-            println!("  - {}", tool.name);
+            debug!("  - {}", tool.name);
         }
 
         Ok(())
@@ -249,7 +249,7 @@ mod tests {
 
         // Assert that the result is a non-empty string (the converted time)
         assert!(!result.is_empty());
-        println!("Convert time result: {}", result);
+        debug!("Convert time result: {}", result);
 
         Ok(())
     }
