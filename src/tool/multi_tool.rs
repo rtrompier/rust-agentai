@@ -44,7 +44,8 @@ impl ToolBox for MergeTool {
         // only split once
         match tool_name.split_once("_") {
             Some((tool_index, original_tool_name)) => {
-                let tool_index = tool_index
+                let index = tool_index.split("-").nth(1).expect("tool-index");
+                let tool_index = index
                     .parse::<usize>()
                     .map_err(|_| ToolError::NoToolFound(tool_name.clone()))?;
 
