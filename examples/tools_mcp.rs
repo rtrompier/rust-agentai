@@ -1,4 +1,4 @@
-use agentai::tool::mcp::{ChildProcess, McpServer, McpToolBox};
+use agentai::tool::mcp::{McpServer, McpToolBox};
 use agentai::Agent;
 use anyhow::Result;
 use log::{info, LevelFilter};
@@ -28,14 +28,14 @@ async fn main() -> Result<()> {
 
     let mut agent = Agent::new_with_url(&base_url, &api_key, SYSTEM);
 
-    let mcp_tools = McpToolBox::new(vec![McpServer::ChildProcess(ChildProcess {
-        command: "uvx".to_string(),
-        args: vec![
+    let mcp_tools = McpToolBox::new(vec![McpServer::new_std_io(
+        "uvx".to_string(),
+        vec![
             "mcp-server-time".to_string(),
             "--local-timezone".to_string(),
             "UTC".to_string(),
         ],
-    })])
+    )])
     .await?;
 
     let answer: Answer = agent

@@ -231,4 +231,8 @@ impl Agent {
             "Unable to get response in {max_iterations} tries"
         )))
     }
+
+    pub fn clear_history(&mut self) {
+        self.history.clear();
+    }
 }
