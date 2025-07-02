@@ -24,7 +24,11 @@ pub struct StdIoMcp {
 }
 
 impl StdIoMcp {
-    pub async fn try_new(command: String, args: Vec<String>) -> AnyhowResult<Self> {
+    pub async fn try_new(
+        command: String,
+        args: Vec<String>,
+        whitelist_tools: Option<Vec<String>>,
+    ) -> AnyhowResult<Self> {
         let mcp_client = ()
             .serve(TokioChildProcess::new(Command::new(command).configure(
                 |cmd| {
@@ -50,6 +54,13 @@ impl StdIoMcp {
                     serde_json::to_value(tool.input_schema)
                         .expect("Failed to convert input schema to JSON"),
                 ),
+            })
+            .filter(|tool| {
+                if let Some(whitelist_tools) = &whitelist_tools {
+                    whitelist_tools.contains(&tool.name)
+                } else {
+                    true
+                }
             })
             .collect();
 
