@@ -115,7 +115,7 @@ impl Agent {
         toolbox: Option<&dyn ToolBox>,
         iteration: Option<u32>,
         config: Option<ChatOptions>,
-    ) -> Result<D>
+    ) -> Result<Vec<D>>
     where
         D: DeserializeOwned + JsonSchema + 'static,
     {
@@ -149,6 +149,8 @@ impl Agent {
         // TODO move it to config structure
         let max_iterations = iteration.unwrap_or(DEFAULT_ITERATION);
 
+        let mut answers = vec![];
+
         for iteration in 0..max_iterations {
             debug!("Agent iteration: {}", iteration);
             // Create chat request
@@ -160,6 +162,8 @@ impl Agent {
                 .client
                 .exec_chat(model, chat_req, Some(&chat_opts))
                 .await?;
+
+            let final_answer = chat_resp.content.len() == 1;
 
             for content in chat_resp.content {
                 match content {
@@ -175,7 +179,10 @@ impl Agent {
                             resp = Value::String(resp).to_string();
                         }
                         let resp = from_str(&resp)?;
-                        return Ok(resp);
+                        answers.push(resp);
+                        if final_answer {
+                            return Ok(answers);
+                        }
                     }
                     MessageContent::ToolCalls(tools_call) => {
                         self.history.push(ChatMessage::from(tools_call.clone()));
