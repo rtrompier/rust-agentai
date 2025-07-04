@@ -54,6 +54,7 @@ impl StdIoMcp {
                     serde_json::to_value(tool.input_schema)
                         .expect("Failed to convert input schema to JSON"),
                 ),
+                config: None,
             })
             .filter(|tool| {
                 if let Some(whitelist_tools) = &whitelist_tools {
@@ -118,6 +119,7 @@ mod tests {
                 "--local-timezone".to_string(),
                 "UTC".to_string(),
             ],
+            None,
         )
         .await
     }

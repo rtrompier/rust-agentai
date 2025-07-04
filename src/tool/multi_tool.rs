@@ -84,6 +84,7 @@ mod tests {
                         "--local-timezone".to_string(),
                         "UTC".to_string(),
                     ],
+                    None,
                 )
                 .await
                 .unwrap(),
@@ -96,6 +97,7 @@ mod tests {
                         "--local-timezone".to_string(),
                         "Europe/Paris".to_string(),
                     ],
+                    None,
                 )
                 .await
                 .unwrap(),
