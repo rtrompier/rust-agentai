@@ -163,7 +163,12 @@ impl Agent {
                 .exec_chat(model, chat_req, Some(&chat_opts))
                 .await?;
 
-            let final_answer = chat_resp.content.len() == 1;
+            // Check if any tool with be called
+            let mut tool_call = false;
+
+            if let Some(reasoning_content) = chat_resp.reasoning_content {
+                debug!("Agent Reasoning: {}", reasoning_content);
+            }
 
             for content in chat_resp.content {
                 match content {
@@ -180,14 +185,12 @@ impl Agent {
                         }
                         let resp = from_str(&resp)?;
                         answers.push(resp);
-                        if final_answer {
-                            return Ok(answers);
-                        }
                     }
                     MessageContent::ToolCalls(tools_call) => {
                         self.history.push(ChatMessage::from(tools_call.clone()));
                         // Go through tool use
                         for tool_request in tools_call {
+                            tool_call = true;
                             trace!(
                                 "Tool request: {} with arguments: {}",
                                 tool_request.fn_name,
@@ -231,6 +234,10 @@ impl Agent {
                         )));
                     }
                 };
+            }
+            if !tool_call {
+                debug!("no more tool calls, returning answers");
+                return Ok(answers);
             }
         }
 
