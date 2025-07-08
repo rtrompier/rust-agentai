@@ -22,7 +22,8 @@ cargo-args = ["-Zunstable-options", "-Zrustdoc-scrape-examples"]
 
 [dependencies]
 agentai-macros = { path = "./agentai-macros", version = "0.1", optional = true }
-genai = { git = "https://github.com/XciD/rust-genai", rev = "73d4c8b8d5590699e25ee9fce905957eb504e37f" }
+genai = { git = "https://github.com/XciD/rust-genai", rev = "c379324b2fbf02a2b00320763a5afd5a9bf5bb14" }
+#genai = { path = "../rust-genai2"}
 anyhow = "1.0.98"
 thiserror = "2.0"
 serde = "1.0.219"
