@@ -76,11 +76,14 @@ impl ToolBox for StdIoMcp {
     }
 
     async fn call_tool(&self, tool_name: String, arguments: Value) -> Result<String, ToolError> {
+        let Some(arguments) = arguments.as_object() else {
+            return Err(ToolError::Other(anyhow::anyhow!("Invalid arguments")));
+        };
         let call_result = self
             .mcp_client
             .call_tool(CallToolRequestParam {
                 name: tool_name.clone().into(),
-                arguments: Some(arguments.as_object().unwrap().clone()),
+                arguments: Some(arguments.clone()),
             })
             .await
             .map_err(anyhow::Error::new)?;
