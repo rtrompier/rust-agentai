@@ -30,8 +30,6 @@ pub mod websearch;
 pub mod stdio_mcp;
 pub mod streamable_http_mcp;
 
-pub mod multi_tool;
-
 use serde_json::Value;
 use thiserror::Error;
 

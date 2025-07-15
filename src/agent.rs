@@ -9,15 +9,15 @@
 //! To read more about tool look into [crate::tool]
 
 use crate::tool::ToolBox;
-use anyhow::{Result, anyhow};
+use anyhow::{anyhow, Result};
 use genai::adapter::AdapterKind;
 use genai::chat::{ChatMessage, ChatOptions, ChatRequest, JsonSpec, MessageContent, ToolResponse};
 use genai::resolver::{AuthData, Endpoint, ServiceTargetResolver};
 use genai::{Client, ClientBuilder, ModelIden, ServiceTarget};
 use log::{debug, trace};
-use schemars::{JsonSchema, schema_for};
+use schemars::{schema_for, JsonSchema};
 use serde::de::DeserializeOwned;
-use serde_json::{Value, from_str, json};
+use serde_json::{from_str, json, Value};
 use std::any::TypeId;
 use std::sync::Arc;
 
@@ -91,6 +91,10 @@ impl Agent {
             .with_service_target_resolver(target_resolver)
             .build();
         Self::new_with_client(client, system)
+    }
+
+    pub fn push_message(&mut self, message: ChatMessage) {
+        self.history.push(message);
     }
 
     /// Runs the agent with the given model and prompt.
@@ -193,7 +197,8 @@ impl Agent {
                             tool_call = true;
                             trace!(
                                 "Tool request: {} with arguments: {}",
-                                tool_request.fn_name, tool_request.fn_arguments
+                                tool_request.fn_name,
+                                tool_request.fn_arguments
                             );
                             if let Some(tool) = toolbox {
                                 match tool
