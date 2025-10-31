@@ -32,7 +32,7 @@ schemars = { version = "0.9", features = ["derive"] }
 async-trait = "0.1.88"
 log = "0.4.27"
 reqwest = "0.12.18"
-rmcp = { git = "https://github.com/modelcontextprotocol/rust-sdk", branch = "main", features = [
+rmcp = { git = "https://github.com/modelcontextprotocol/rust-sdk", rev = "3196c95f1dfafbffbdcdd6d365c94969ac975e6a", features = [
     "client",
     "transport-child-process",
     "reqwest",
