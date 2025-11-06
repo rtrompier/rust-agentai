@@ -5,6 +5,8 @@
 //!
 //!
 
+use std::collections::HashMap;
+
 use crate::tool::{Tool, ToolBox, ToolError};
 use anyhow::Result as AnyhowResult;
 use async_trait::async_trait;
@@ -27,12 +29,14 @@ impl StdIoMcp {
     pub async fn try_new(
         command: String,
         args: Vec<String>,
+        env: Option<HashMap<String, String>>,
         whitelist_tools: Option<Vec<String>>,
     ) -> AnyhowResult<Self> {
         let mcp_client = ()
             .serve(TokioChildProcess::new(Command::new(command).configure(
                 |cmd| {
                     cmd.args(args);
+                    cmd.envs(env.unwrap_or_default());
                 },
             ))?)
             .await?;
